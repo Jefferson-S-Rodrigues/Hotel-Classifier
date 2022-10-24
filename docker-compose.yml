@@ -1,0 +1,131 @@
+version: '3'
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.0.1
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - backend
+
+  broker:
+    image: confluentinc/cp-kafka:7.0.1
+    container_name: broker
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker:29092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+    expose:
+      - "9092/tcp"
+    networks:
+      - backend
+
+  angularnginx:
+    container_name: angularnginx
+    build:
+        dockerfile: ./mlp-hotel/Dockerfile
+        context: .
+    image: nginx
+    ports:
+        - "80:80"
+    expose: 
+        - "80/tcp"
+    networks:
+      - frontend
+
+  pythonbackendff:
+    container_name: pythonbackendff
+    build:
+        dockerfile: ./backff/Dockerfile
+        context: .
+    command: python main.py
+    volumes:
+      - .:/codebackendff
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    expose: 
+      - "8080/tcp"
+    depends_on:
+      - broker
+      - mongo
+    networks:
+      - frontend
+      - backend
+      
+  pythonservices:
+    container_name: pythonservices
+    build:
+        dockerfile: ./services/Dockerfile
+        context: .
+    command: python main.py
+    depends_on:
+      - broker
+      - mongo
+    volumes:
+      - .:/codeservices
+    env_file:
+      - .env
+    networks:
+      - backend
+      
+  pythonhotelclassifier:
+    container_name: pythonhotelclassifier
+    build:
+        dockerfile: ./tfmodel/Dockerfile
+        context: .
+    command: python main.py
+    depends_on:
+      - broker
+      - mongo
+    env_file:
+      - .env
+    volumes:
+      - .:/codeautohotel
+    networks:
+      - backend
+
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    env_file:
+      - .env
+    ports:
+      - "27017:27017"
+    expose:
+      - "27017/tcp"
+    networks:
+      - backend
+  
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    expose:
+      - "8081/tcp"
+    env_file:
+      - .env
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_USERNAME}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_PASSWORD}
+      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongo:27017/
+
+networks:
+  frontend:
+    external: false
+    name: frontend
+  backend:
+    external: false
+    name: backend

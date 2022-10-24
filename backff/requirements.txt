@@ -1,0 +1,8 @@
+fastapi
+python-jose
+passlib
+uvicorn
+python-multipart
+bcrypt
+kafka-python==2.0.2
+pymongo

@@ -1,0 +1,35 @@
+<div class="main-div">
+
+    <mat-card class="card-home">
+        <mat-card-title>Criação de Conta</mat-card-title>
+        <mat-card-subtitle>Crie sua conta para acessar o sistema</mat-card-subtitle>
+        <form class="form-signup" [formGroup]="signupForm" (ngSubmit)="newUser()">
+            <mat-card-content>
+                <mat-form-field class="example-full-width" appearance="fill">
+                    <mat-label>Usuário</mat-label>
+                    <input matInput placeholder="Usuário" formControlName="username" required>
+                </mat-form-field>
+
+                <mat-form-field class="example-full-width" appearance="fill">
+                    <mat-label>Email</mat-label>
+                    <input type="email" matInput placeholder="e-mail" formControlName="email" required>
+                </mat-form-field>
+
+                <mat-form-field class="example-full-width" appearance="fill">
+                    <mat-label>Senha</mat-label>
+                    <input type="password" matInput placeholder="Senha" formControlName="password" required>
+                </mat-form-field>
+
+                <mat-form-field class="example-full-width" appearance="fill">
+                    <mat-label>Nome Completo</mat-label>
+                    <input type="text" matInput placeholder="Nome completo" formControlName="full_name" required>
+                </mat-form-field>
+
+            </mat-card-content>
+            <mat-card-actions>
+                <button type="submit" mat-button>Criar</button>
+            </mat-card-actions>
+        </form>
+    </mat-card>
+</div>
+
