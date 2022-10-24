@@ -6,6 +6,12 @@ Trabalho de conclusão de curso do curso de MBA em Machine Learning in Productio
 
 1. Criar o arquivo `.env` a partir do arquivo `.env-template`
 
+    1. Para criar a chave secreta, use o comando:
+
+```console
+openssl rand -hex 32
+```
+
 2. build do angular em produção. Exemplo:
 
 ```console
