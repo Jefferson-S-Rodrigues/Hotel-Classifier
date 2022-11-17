@@ -19,6 +19,12 @@ export class CityComponent implements OnInit {
     filter_name: ''
   });
 
+  field_search: string = "Hotel Name";
+
+  updateFieldSearch($event: any) {
+    this.field_search = $event.target.options[$event.target.options.selectedIndex].text;
+  }
+
   hotellist: Hotel[] = [];
   panelOpenState = true;
 
@@ -37,6 +43,7 @@ export class CityComponent implements OnInit {
 
   listHotel() {
     let hotel = this.hotelForm.getRawValue() as HotelRequest;
+    hotel.n = hotel.n ? hotel.n + 1 : 2;
     this.hotelsService.getHotelList(hotel).subscribe({
       next: (result) => {
         this.retornar();

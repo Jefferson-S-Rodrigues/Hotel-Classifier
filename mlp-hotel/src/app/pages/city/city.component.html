@@ -5,13 +5,13 @@
         <form class="form-hotel" [formGroup]="hotelForm" (ngSubmit)="listHotel()">
             <mat-card-content>
                 <mat-form-field class="example-full-width" appearance="fill">
-                    <mat-label>Nome do Hotel</mat-label>
-                    <input matInput placeholder="Nome do hotel" formControlName="name" required>
+                    <mat-label>{{field_search}}</mat-label>
+                    <input matInput placeholder="{{field_search}}" formControlName="name" required>
                 </mat-form-field>
 
                 <mat-form-field class="example-full-width" appearance="fill">
-                    <mat-label>Nome do Hotel</mat-label>
-                    <select matNativeControl formControlName="index_name" required>
+                    <mat-label>Busca por</mat-label>
+                    <select matNativeControl formControlName="index_name" required (change)="updateFieldSearch($event)">
                         <option value="city">Cidade</option>
                         <option value="country">País</option>
                         <option value="hotel_name">Nome do Hotel</option>
@@ -26,11 +26,6 @@
                     <mat-label>Número de resultados</mat-label>
                     <input type="number" matInput placeholder="Número de resultados" formControlName="n" required>
                 </mat-form-field>
-
-                <!-- <section class="example-full-width" appearance="fill">
-                        <p><mat-checkbox matInput class="example-margin" formControlName="return_dist">Retornar distâncias</mat-checkbox></p>
-                        <p><mat-checkbox matInput class="example-margin" formControlName="filtering">Filtrando</mat-checkbox></p>
-                    </section> -->
 
                 <mat-form-field class="example-full-width" appearance="fill">
                     <mat-label>Filtro</mat-label>
@@ -48,24 +43,24 @@
         <mat-card-title>Hotel</mat-card-title>
         <mat-card-subtitle>Hotéis recomendados</mat-card-subtitle>
         <mat-card-content>
-        <table mat-table [dataSource]="hotellist">
-            <ng-container matColumnDef="position">
-                <th class="title-table-hotel" mat-header-cell *matHeaderCellDef>Posição</th>
-                <td mat-cell *matCellDef="let element; let i = index">{{i + 1}}</td>
-            </ng-container>
+            <table mat-table [dataSource]="hotellist">
+                <ng-container matColumnDef="position">
+                    <th class="title-table-hotel" mat-header-cell *matHeaderCellDef>Posição</th>
+                    <td mat-cell *matCellDef="let element; let i = index">{{i + 1}}</td>
+                </ng-container>
 
-            <ng-container matColumnDef="hotel">
-                <th mat-header-cell *matHeaderCellDef>Hotel Recomendado</th>
-                <td mat-cell *matCellDef="let element; columns: hotel;">{{element.hotel}}</td>
-            </ng-container>
+                <ng-container matColumnDef="hotel">
+                    <th mat-header-cell *matHeaderCellDef>Hotel Recomendado</th>
+                    <td mat-cell *matCellDef="let element; columns: hotel;">{{element.hotel}}</td>
+                </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
-    </mat-card-content>
-    <mat-card-actions>
-        <button (click)="retornar" mat-button>Retornar</button>
-    </mat-card-actions>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+        </mat-card-content>
+        <mat-card-actions>
+            <button (click)="retornar" mat-button>Retornar</button>
+        </mat-card-actions>
     </mat-card>
 
 </div>
